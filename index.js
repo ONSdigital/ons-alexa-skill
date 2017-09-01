@@ -152,6 +152,46 @@ var handlers = {
 					speechOutput += ' for ' + areaName + ',';
 					break;
 				
+				case 'unemployment_unitedKingdom':
+					metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/data';
+					metricUnits = ' percent';
+					metricMultiplier = 1;
+					
+					speechOutput += ' for ' + areaName + ',';
+					break;
+				
+				case 'unemployment_england':
+					metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/ycnl/lms/data';
+					metricUnits = ' percent';
+					metricMultiplier = 1;
+					
+					speechOutput += ' for ' + areaName + ',';
+					break;
+				
+				case 'unemployment_scotland':
+					metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/ycnn/lms/data';
+					metricUnits = ' percent';
+					metricMultiplier = 1;
+					
+					speechOutput += ' for ' + areaName + ',';
+					break;
+				
+				case 'unemployment_wales':
+					metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/ycnm/lms/data';
+					metricUnits = ' percent';
+					metricMultiplier = 1;
+					
+					speechOutput += ' for ' + areaName + ',';
+					break;
+				
+				case 'unemployment_northernIreland':
+					metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/zsfb/lms/data';
+					metricUnits = ' percent';
+					metricMultiplier = 1;
+					
+					speechOutput += ' for ' + areaName + ',';
+					break;
+				
 				default:
 					console.log('>>> No area-based metric found matching: ' + metricId + '_' + areaId);
 					console.log('>>> Checking for non-area-based metric matching: ' + metricId);
@@ -162,7 +202,7 @@ var handlers = {
 							metricMultiplier = 1;
 							
 							if (areaId !== 'unitedKingdom') {
-								speechOutput += ' is only available for the United Kingdom,';
+								speechOutput += ' is available for the United Kingdom, Wales, Northern Island and Scotland, for the United Kingdom,';
 							} else {
 								speechOutput += ' for the United Kingdom,';
 							}

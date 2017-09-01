@@ -1,0 +1,40 @@
+{
+  "name": "intent-utterance-generator",
+  "main": "intent-utterance-generator.js",
+  "homepage": "https://github.com/miguelmota/intent-utterance-generator",
+  "authors": [
+    "Miguel Mota <hello@miguelmota.com>"
+  ],
+  "description": "Expand custom utterance slots of phrases, to use with Alexa Skills Kit Sample Utterances",
+  "keywords": [
+    "intent",
+    "utterance",
+    "file",
+    "expander",
+    "amazon",
+    "alexa",
+    "skill",
+    "echo",
+    "ask",
+    "speech",
+    "voice"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "license": "MIT",
+  "_release": "abe1657534",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "abe16575343e50d908464bd0c2111e2d928f4c63"
+  },
+  "_source": "https://github.com/miguelmota/intent-utterance-expander.git",
+  "_target": "*",
+  "_originalSource": "intent-utterance-expander",
+  "_direct": true
+}
