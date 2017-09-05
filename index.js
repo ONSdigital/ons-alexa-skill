@@ -466,7 +466,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				};
 				
 				// Convert any abbreviated month to what we want spoken
-				yearData.year
+				yearData.year = yearData.year
 					.replace('JAN ', 'January ')
 					.replace('FEB ', 'February ')
 					.replace('MAR ', 'March ')
