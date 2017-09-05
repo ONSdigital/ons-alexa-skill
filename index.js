@@ -142,12 +142,8 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 			}
 			
 			console.log('>>> Getting data for date', forDate);
-			
-			speechOutput += 'The ' + metricName + ' in ' + forDate;
 		} else {
 			useLatestAvailable = true;
-			speechOutput += 'The latest ' + metricName;
-			
 			console.log('>>> Getting data for latest available date');
 		}
 		
@@ -167,6 +163,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUnits = '';
 				metricMultiplier = 1;
 				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
+				
 				speechOutput += ' for ' + areaName + ',';
 				break;
 			
@@ -174,6 +176,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUrl = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/gbpop/data';
 				metricUnits = '';
 				metricMultiplier = 1;
+				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
 				
 				speechOutput += ' for ' + areaName + ',';
 				break;
@@ -183,6 +191,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUnits = '';
 				metricMultiplier = 1;
 				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
+				
 				speechOutput += ' for ' + areaName + ',';
 				break;
 			
@@ -190,6 +204,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUrl = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/wapop/data';
 				metricUnits = '';
 				metricMultiplier = 1;
+				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
 				
 				speechOutput += ' for ' + areaName + ',';
 				break;
@@ -199,6 +219,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUnits = '';
 				metricMultiplier = 1;
 				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
+				
 				speechOutput += ' for ' + areaName + ',';
 				break;
 			
@@ -206,6 +232,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUrl = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/nipop/data';
 				metricUnits = '';
 				metricMultiplier = 1;
+				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
 				
 				speechOutput += ' for ' + areaName + ',';
 				break;
@@ -215,6 +247,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUnits = '';
 				metricMultiplier = 1;
 				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
+				
 				speechOutput += ' for ' + areaName + ',';
 				break;
 			
@@ -222,6 +260,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/data';
 				metricUnits = ' percent';
 				metricMultiplier = 1;
+				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
 				
 				speechOutput += ' for ' + areaName + ',';
 				break;
@@ -231,6 +275,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUnits = ' percent';
 				metricMultiplier = 1;
 				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
+				
 				speechOutput += ' for ' + areaName + ',';
 				break;
 			
@@ -238,6 +288,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/ycnn/lms/data';
 				metricUnits = ' percent';
 				metricMultiplier = 1;
+				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
 				
 				speechOutput += ' for ' + areaName + ',';
 				break;
@@ -247,6 +303,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUnits = ' percent';
 				metricMultiplier = 1;
 				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
+				
 				speechOutput += ' for ' + areaName + ',';
 				break;
 			
@@ -254,6 +316,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/zsfb/lms/data';
 				metricUnits = ' percent';
 				metricMultiplier = 1;
+				
+				if (useLatestAvailable) {
+					speechOutput += 'The latest ' + metricName;
+				} else {
+					speechOutput += 'The ' + metricName + ' in ' + forDate;
+				}
 				
 				speechOutput += ' for ' + areaName + ',';
 				break;
@@ -267,6 +335,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 						metricUnits = ' percent';
 						metricMultiplier = 1;
 						
+						if (useLatestAvailable) {
+							speechOutput += 'The latest ' + metricName;
+						} else {
+							speechOutput += 'The ' + metricName + ' in ' + forDate;
+						}
+						
 						if (areaId !== 'unitedKingdom') {
 							speechOutput += ' is available for the United Kingdom, Wales, Northern Island and Scotland, for the United Kingdom,';
 						} else {
@@ -279,17 +353,47 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 						metricUnits = ' percent';
 						metricMultiplier = 1;
 						
+						if (useLatestAvailable) {
+							speechOutput += 'The latest ' + metricName;
+						} else {
+							speechOutput += 'The ' + metricName + ' in ' + forDate;
+						}
+						
 						if (areaId !== 'unitedKingdom') {
 							speechOutput += ' is only available for the United Kingdom,';
 						} else {
 							speechOutput += ' for the United Kingdom,';
 						}
 						break;
-					
+						
+					case 'cpih':
+						metricUrl = 'https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/l55o/mm23/data';
+						metricUnits = ' percent';
+						metricMultiplier = 1;
+						
+						if (useLatestAvailable) {
+							speechOutput += 'The latest ' + metricName;
+						} else {
+							speechOutput += 'The ' + metricName + ' in ' + forDate;
+						}
+						
+						if (areaId !== 'unitedKingdom') {
+							speechOutput += ' is only available for the United Kingdom,';
+						} else {
+							speechOutput += ' for the United Kingdom,';
+						}
+						break;
+						
 					case 'rpi':
 						metricUrl = 'https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/czbh/data';
 						metricUnits = ' percent';
 						metricMultiplier = 1;
+						
+						if (useLatestAvailable) {
+							speechOutput += 'The latest ' + metricName;
+						} else {
+							speechOutput += 'The ' + metricName + ' in ' + forDate;
+						}
 						
 						if (areaId !== 'unitedKingdom') {
 							speechOutput += ' is only available for the United Kingdom,';
@@ -299,9 +403,16 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 						break;
 					
 					case 'gdp':
-						metricUrl = 'https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/abmi/data';
 						metricUnits = '';
 						metricMultiplier = 1000000;
+						
+						if (useLatestAvailable) {
+							metricUrl = 'https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ihyq/pgdp/data';
+							speechOutput += 'The latest chained volume measure of GDP quarterly growth';
+						} else {
+							metricUrl = 'https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ihyp/pn2/data';
+							speechOutput += 'The chained volume measure of GDP yearly growth in ' + forDate;
+						}
 						
 						if (areaId !== 'unitedKingdom') {
 							speechOutput += ' is only available for the United Kingdom,';
@@ -347,21 +458,34 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 			}
 			
 			// We now have the JSON! Get the data we are interested in.
-			db.collection('responseData').setData(json.years);
-			
 			if (useLatestAvailable) {
-				// Just get the entry sorted by date descending
-				// TODO: Use the data in description instead of latest year available
-				yearData = db.collection('responseData').findOne({}, {
-					$orderBy: {
-						'year': -1
-					}
-				});
+				// Use the data in "description" field, which has the latest available info
+				yearData = {
+					value: json.description.number,
+					year: json.description.date.split(' ').reverse().join(' ') // get the date components in the correct spoken order (e.g. MAY 2017 instead of 2017 MAY)
+				};
+				
+				// Convert any abbreviated month to what we want spoken
+				yearData.year
+					.replace('JAN ', 'January ')
+					.replace('FEB ', 'February ')
+					.replace('MAR ', 'March ')
+					.replace('APR ', 'April ')
+					.replace('MAY ', 'May ')
+					.replace('JUN ', 'June ')
+					.replace('JUL ', 'July ')
+					.replace('AUG ', 'August ')
+					.replace('SEP ', 'September ')
+					.replace('OCT ', 'October ')
+					.replace('NOV ', 'November ')
+					.replace('DEC ', 'December ');
 				
 				forDate = yearData.year;
 				
 				speechOutput += ' compiled in ' + forDate + ', was'
 			} else {
+				db.collection('responseData').setData(json.years);
+				
 				yearData = db.collection('responseData').findOne({
 					year: forDate
 				});
