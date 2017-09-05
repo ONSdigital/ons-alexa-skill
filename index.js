@@ -403,8 +403,8 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 						break;
 					
 					case 'gdp':
-						metricUnits = '';
-						metricMultiplier = 1000000;
+						metricUnits = ' percent';
+						metricMultiplier = 1;
 						
 						if (useLatestAvailable) {
 							metricUrl = 'https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ihyq/pgdp/data';
