@@ -5,7 +5,7 @@ var Alexa = require('alexa-sdk'),
 	ForerunnerDB = require('forerunnerdb'),
 	welcomeOutput = "Let's get some stats, what would you like to know?",
 	welcomeReprompt = "You can ask for unemployment, CPI or the population.",
-	APP_ID = undefined,  // TODO replace with your app ID (OPTIONAL).
+	APP_ID = 'amzn1.ask.skill.5b31247e-b299-4307-a0f9-1154c3e9c077',
 	fdb,
 	db,
 	speechOutput,
