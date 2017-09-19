@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "alexa-sdk": "^1.0.11",
+    "alexa-sdk": "^1.0.14",
     "forerunnerdb": "^2.0.5",
     "request": "^2.81.0"
   },
