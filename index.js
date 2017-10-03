@@ -1,6 +1,7 @@
 'use strict';
 
 var Alexa = require('alexa-sdk'),
+	async = require('async'),
 	request = require('request'),
 	ForerunnerDB = require('forerunnerdb'),
 	welcomeOutput = "Let's get some stats, what would you like to know?",
@@ -83,14 +84,19 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 			areaData,
 			areaName,
 			areaId,
-			metricUrl,
+			metricUrl1,
+			metricUrl2,
+			metricOperation,
 			metricUnits,
 			metricData,
 			metricName,
 			metricId,
 			metricMultiplier,
 			metricOnlyUk,
-			useLatestAvailable;
+			useLatestAvailable,
+			asyncArr,
+			requestOnsData,
+			originalAreaName;
 		
 		if (err) {
 			// We handle this in handleDialogState instead, this is just
@@ -154,12 +160,14 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 			areaName = 'the United Kingdom';
 		}
 		
+		originalAreaName = areaName;
+		
 		// Get the metric value that the user is looking for - start with area-based metrics and then
 		// fall back to non-area-based metrics
 		console.log('>>> Checking for area-based metric matching: ' + metricId + '_' + areaId);
 		switch (metricId + '_' + areaId) {
 			case 'population_unitedKingdom':
-				metricUrl = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/ukpop/data';
+				metricUrl1 = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/ukpop/data';
 				metricUnits = '';
 				metricMultiplier = 1;
 				
@@ -173,7 +181,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'population_greatBritain':
-				metricUrl = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/gbpop/data';
+				metricUrl1 = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/gbpop/data';
 				metricUnits = '';
 				metricMultiplier = 1;
 				
@@ -187,7 +195,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'population_england':
-				metricUrl = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/enpop/data';
+				metricUrl1 = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/enpop/data';
 				metricUnits = '';
 				metricMultiplier = 1;
 				
@@ -201,7 +209,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'population_wales':
-				metricUrl = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/wapop/data';
+				metricUrl1 = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/wapop/data';
 				metricUnits = '';
 				metricMultiplier = 1;
 				
@@ -215,7 +223,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'population_scotland':
-				metricUrl = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/scpop/data';
+				metricUrl1 = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/scpop/data';
 				metricUnits = '';
 				metricMultiplier = 1;
 				
@@ -229,7 +237,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'population_northernIreland':
-				metricUrl = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/nipop/data';
+				metricUrl1 = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/nipop/data';
 				metricUnits = '';
 				metricMultiplier = 1;
 				
@@ -243,7 +251,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'population_englandAndWales':
-				metricUrl = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/ewpop/data';
+				metricUrl1 = 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/ewpop/data';
 				metricUnits = '';
 				metricMultiplier = 1;
 				
@@ -257,7 +265,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'unemployment_unitedKingdom':
-				metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/data';
+				metricUrl1 = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/data';
 				metricUnits = ' percent';
 				metricMultiplier = 1;
 				
@@ -271,7 +279,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'unemployment_england':
-				metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/ycnl/lms/data';
+				metricUrl1 = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/ycnl/lms/data';
 				metricUnits = ' percent';
 				metricMultiplier = 1;
 				
@@ -285,7 +293,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'unemployment_scotland':
-				metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/ycnn/lms/data';
+				metricUrl1 = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/ycnn/lms/data';
 				metricUnits = ' percent';
 				metricMultiplier = 1;
 				
@@ -299,7 +307,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'unemployment_wales':
-				metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/ycnm/lms/data';
+				metricUrl1 = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/ycnm/lms/data';
 				metricUnits = ' percent';
 				metricMultiplier = 1;
 				
@@ -313,7 +321,7 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 			
 			case 'unemployment_northernIreland':
-				metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/zsfb/lms/data';
+				metricUrl1 = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/zsfb/lms/data';
 				metricUnits = ' percent';
 				metricMultiplier = 1;
 				
@@ -330,8 +338,90 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				console.log('>>> No area-based metric found matching: ' + metricId + '_' + areaId);
 				console.log('>>> Checking for non-area-based metric matching: ' + metricId);
 				switch (metricId) {
+					case 'wageGrowth':
+						metricUrl1 = 'https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/timeseries/kac3/lms/data';
+						metricUnits = ' percent';
+						metricMultiplier = 1;
+						
+						if (useLatestAvailable) {
+							speechOutput += 'The latest ' + metricName;
+						} else {
+							speechOutput += 'The ' + metricName + ' in ' + forDate;
+						}
+						
+						if (areaId !== 'unitedKingdom') {
+							speechOutput += ' is only available for the United Kingdom,';
+						} else {
+							speechOutput += ' for the United Kingdom,';
+						}
+						
+						areaName = "United Kingdom";
+						break;
+					
+					case 'unemploymentFemale':
+						metricUrl1 = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsz/lms/data';
+						metricUnits = ' percent';
+						metricMultiplier = 1;
+						
+						if (useLatestAvailable) {
+							speechOutput += 'The latest ' + metricName;
+						} else {
+							speechOutput += 'The ' + metricName + ' in ' + forDate;
+						}
+						
+						if (areaId !== 'unitedKingdom') {
+							speechOutput += ' is only available for the United Kingdom,';
+						} else {
+							speechOutput += ' for the United Kingdom,';
+						}
+						
+						areaName = "United Kingdom";
+						break;
+					
+					case 'unemploymentMale':
+						metricUrl1 = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsy/lms/data';
+						metricUnits = ' percent';
+						metricMultiplier = 1;
+						
+						if (useLatestAvailable) {
+							speechOutput += 'The latest ' + metricName;
+						} else {
+							speechOutput += 'The ' + metricName + ' in ' + forDate;
+						}
+						
+						if (areaId !== 'unitedKingdom') {
+							speechOutput += ' is only available for the United Kingdom,';
+						} else {
+							speechOutput += ' for the United Kingdom,';
+						}
+						
+						areaName = "United Kingdom";
+						break;
+					
+					case 'unemploymentDifferenceMaleFemale':
+						metricUrl1 = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsy/lms/data';
+						metricUrl2 = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsz/lms/data';
+						metricUnits = ' percent';
+						metricMultiplier = 1;
+						metricOperation = 'difference';
+						
+						if (useLatestAvailable) {
+							speechOutput += 'The latest ' + metricName;
+						} else {
+							speechOutput += 'The ' + metricName + ' in ' + forDate;
+						}
+						
+						if (areaId !== 'unitedKingdom') {
+							speechOutput += ' is only available for the United Kingdom,';
+						} else {
+							speechOutput += ' for the United Kingdom,';
+						}
+						
+						areaName = "United Kingdom";
+						break;
+					
 					case 'unemployment':
-						metricUrl = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/data';
+						metricUrl1 = 'https://www.ons.gov.uk/employmentandlabourmarket/peoplenotinwork/unemployment/timeseries/mgsx/data';
 						metricUnits = ' percent';
 						metricMultiplier = 1;
 						
@@ -346,10 +436,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 						} else {
 							speechOutput += ' for the United Kingdom,';
 						}
+						
+						areaName = "United Kingdom";
 						break;
 					
 					case 'cpi':
-						metricUrl = 'https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/d7g7/data';
+						metricUrl1 = 'https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/d7g7/data';
 						metricUnits = ' percent';
 						metricMultiplier = 1;
 						
@@ -364,10 +456,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 						} else {
 							speechOutput += ' for the United Kingdom,';
 						}
-						break;
 						
+						areaName = "United Kingdom";
+						break;
+					
 					case 'cpih':
-						metricUrl = 'https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/l55o/mm23/data';
+						metricUrl1 = 'https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/l55o/mm23/data';
 						metricUnits = ' percent';
 						metricMultiplier = 1;
 						
@@ -382,10 +476,12 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 						} else {
 							speechOutput += ' for the United Kingdom,';
 						}
+						
+						areaName = "United Kingdom";
 						break;
-						
+					
 					case 'rpi':
-						metricUrl = 'https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/czbh/data';
+						metricUrl1 = 'https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/czbh/data';
 						metricUnits = ' percent';
 						metricMultiplier = 1;
 						
@@ -400,6 +496,8 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 						} else {
 							speechOutput += ' for the United Kingdom,';
 						}
+						
+						areaName = "United Kingdom";
 						break;
 					
 					case 'gdp':
@@ -407,10 +505,10 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 						metricMultiplier = 1;
 						
 						if (useLatestAvailable) {
-							metricUrl = 'https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ihyq/pgdp/data';
+							metricUrl1 = 'https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ihyq/pgdp/data';
 							speechOutput += 'The latest chained volume measure of GDP quarterly growth';
 						} else {
-							metricUrl = 'https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ihyp/pn2/data';
+							metricUrl1 = 'https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ihyp/pn2/data';
 							speechOutput += 'The chained volume measure of GDP yearly growth in ' + forDate;
 						}
 						
@@ -419,6 +517,8 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 						} else {
 							speechOutput += ' for the United Kingdom,';
 						}
+						
+						areaName = "United Kingdom";
 						break;
 					
 					default:
@@ -429,44 +529,130 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 				break;
 		}
 		
-		// Ask the ONS API for the metric data we need...
-		request(metricUrl, function (err, response, data) {
-			var json,
-				yearData;
+		asyncArr = [];
+		
+		requestOnsData = function (url) {
+			return function (complete) {
+				request(url, function (err, response, data) {
+					complete(err, {response: response, data: data});
+				});
+			}
+		};
+		
+		if (metricUrl1) {
+			asyncArr.push(requestOnsData(metricUrl1));
+		}
+		
+		if (metricUrl2) {
+			asyncArr.push(requestOnsData(metricUrl2));
+		}
+		
+		async.parallel(asyncArr, function (err, args) {
+			var json1,
+				json2,
+				yearData1,
+				yearData2,
+				response1 = args[0].response,
+				data1 = args[0].data,
+				response2 = args[1] ? args[1].response : undefined,
+				data2 = args[1] ? args[1].data : undefined,
+				metricValue;
 			
 			if (err) {
 				return self.emit(':tell', 'There was an error accessing the office for national statistics data, please try again later!');
 			}
 			
-			if (response) {
-				if (response.statusCode !== 200) {
-					console.log('ERROR: Received non-200 status code from ONS API: ' + JSON.stringify(response));
+			if (response1) {
+				if (response1.statusCode !== 200) {
+					console.log('ERROR: Received non-200 status code from ONS API: ' + JSON.stringify(response1));
 					return self.emit(':tell', 'There was an error accessing the office for national statistics data, please try again later!');
 				}
 			}
 			
 			try {
-				json = JSON.parse(data);
+				json1 = JSON.parse(data1);
 			} catch (e) {
-				console.log('ERROR: JSON parse of data from ONS API failed: ' + e, data);
+				console.log('ERROR: JSON parse of data1 from ONS API failed: ' + e, data1);
 				return self.emit(':tell', 'There was an error accessing the office for national statistics data, please try again later!');
 			}
 			
-			if (!json.years) {
-				console.log('ERROR: No years data available: ', JSON.stringify(json));
+			if (!json1.years) {
+				console.log('ERROR: No years data1 available: ', JSON.stringify(json1));
 				return self.emit(':tell', 'There was an error accessing the office for national statistics data, please try again later!');
 			}
+			
+			if (response2) {
+				if (response2.statusCode !== 200) {
+					console.log('ERROR: Received non-200 status code from ONS API: ' + JSON.stringify(response2));
+					return self.emit(':tell', 'There was an error accessing the office for national statistics data, please try again later!');
+				}
+			}
+			
+			if (data2) {
+				try {
+					json2 = JSON.parse(data2);
+				} catch (e) {
+					console.log('ERROR: JSON parse of data2 from ONS API failed: ' + e, data2);
+					return self.emit(':tell', 'There was an error accessing the office for national statistics data, please try again later!');
+				}
+				
+				if (!json2.years) {
+					console.log('ERROR: No years data2 available: ', JSON.stringify(json2));
+					return self.emit(':tell', 'There was an error accessing the office for national statistics data, please try again later!');
+				}
+			}
+			
+			console.log('JSON1: ', json1);
+			console.log('JSON2: ', json2);
 			
 			// We now have the JSON! Get the data we are interested in.
+			if (!useLatestAvailable) {
+				db.collection('responseData1').setData(json1.years);
+				
+				yearData1 = db.collection('responseData1').findOne({
+					year: forDate
+				});
+				
+				if (!yearData1) {
+					console.log('WARN: No data available for metric: ' + metricName + ' on date ' + forDate + ' - ATTEMPTING TO USE LATEST FIGURES');
+					speechOutput = 'There is no data available for ' + metricName + ' in ' + forDate + ' for ' + originalAreaName + ', however the latest ' + metricName;
+					
+					if (areaName) {
+						speechOutput += " for " + areaName;
+					}
+					
+					useLatestAvailable = true;
+				}
+				
+				if (json2) {
+					db.collection('responseData1').setData(json2.years);
+					
+					yearData2 = db.collection('responseData1').findOne({
+						year: forDate
+					});
+					
+					if (!yearData2) {
+						console.log('WARN: No data available for metric: ' + metricName + ' on date ' + forDate + ' - ATTEMPTING TO USE LATEST FIGURES');
+						speechOutput = 'There is no data available for ' + metricName + ' in ' + forDate + ' for ' + originalAreaName + ', however the latest ' + metricName;
+						
+						if (areaName) {
+							speechOutput += " for " + areaName;
+						}
+						
+						useLatestAvailable = true;
+					}
+				}
+			}
+			
 			if (useLatestAvailable) {
 				// Use the data in "description" field, which has the latest available info
-				yearData = {
-					value: json.description.number,
-					year: json.description.date.split(' ').reverse().join(' ') // get the date components in the correct spoken order (e.g. MAY 2017 instead of 2017 MAY)
+				yearData1 = {
+					value: json1.description.number,
+					year: json1.description.date.split(' ').reverse().join(' ') // get the date components in the correct spoken order (e.g. MAY 2017 instead of 2017 MAY)
 				};
 				
 				// Convert any abbreviated month to what we want spoken
-				yearData.year = yearData.year
+				yearData1.year = yearData1.year
 					.replace('JAN ', 'January ')
 					.replace('FEB ', 'February ')
 					.replace('MAR ', 'March ')
@@ -480,24 +666,53 @@ getStatIntentHandler = function getStatIntentHandler (event, context) {
 					.replace('NOV ', 'November ')
 					.replace('DEC ', 'December ');
 				
-				forDate = yearData.year;
+				if (json2) {
+					yearData2 = {
+						value: json2.description.number,
+						year: json2.description.date.split(' ').reverse().join(' ') // get the date components in the correct spoken order (e.g. MAY 2017 instead of 2017 MAY)
+					};
+					
+					// Convert any abbreviated month to what we want spoken
+					yearData2.year = yearData2.year
+						.replace('JAN ', 'January ')
+						.replace('FEB ', 'February ')
+						.replace('MAR ', 'March ')
+						.replace('APR ', 'April ')
+						.replace('MAY ', 'May ')
+						.replace('JUN ', 'June ')
+						.replace('JUL ', 'July ')
+						.replace('AUG ', 'August ')
+						.replace('SEP ', 'September ')
+						.replace('OCT ', 'October ')
+						.replace('NOV ', 'November ')
+						.replace('DEC ', 'December ');
+				}
+				
+				forDate = yearData1.year;
 				
 				speechOutput += ' compiled in ' + forDate + ', was'
-			} else {
-				db.collection('responseData').setData(json.years);
-				
-				yearData = db.collection('responseData').findOne({
-					year: forDate
-				});
-			}
-			
-			if (!yearData) {
+			} else if (!yearData1) {
 				console.log('ERROR: No data available for metric: ' + metricName + ' on date ' + forDate);
 				return self.emit(':tell', 'There is no data available for ' + metricName + ' in ' + forDate);
 			}
 			
-			speechOutput += ' ' + (yearData.value * metricMultiplier) + metricUnits + '. The next update will be published';
-			speechOutput += ' on ' + json.description.nextRelease;
+			switch (metricOperation) {
+				case 'difference':
+					console.log('Value1: ', parseFloat(yearData1.value));
+					console.log('Value2: ', parseFloat(yearData2.value));
+					metricValue = (parseFloat(yearData1.value) - parseFloat(yearData2.value)).toFixed(2);
+					break;
+					
+				default:
+					metricValue = yearData1.value;
+					break;
+			}
+			
+			speechOutput += ' ' + (metricValue * metricMultiplier) + metricUnits + '.';
+			
+			
+			
+			speechOutput += ' The next update will be published on ' + json1.description.nextRelease;
 			
 			console.log('Got data, speaking the response: "' + speechOutput + '"');
 			
@@ -567,7 +782,7 @@ handleDialogState = function handleDialogState (callback) {
 			
 			return callback(false, false);
 			break;
-			
+		
 		case 'COMPLETED':
 			console.log("Dialog COMPLETED: Alex got all the slot info we need, call the intent handler...");
 			console.log("Returning: " + JSON.stringify(this.event.request.intent));
@@ -576,7 +791,7 @@ handleDialogState = function handleDialogState (callback) {
 			// so call your normal intent handler.
 			return callback(false, true, this.event.request.intent);
 			break;
-			
+		
 		default:
 			console.log("Dialog NOT COMPLETED: Asking Alexa to present dialog (:delegate)...");
 			this.emit(":delegate");
