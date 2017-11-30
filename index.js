@@ -1,12 +1,14 @@
 'use strict';
 
+var alexa;
+
 var Alexa = require('alexa-sdk'),
 	async = require('async'),
 	request = require('request'),
 	ForerunnerDB = require('forerunnerdb'),
 	welcomeOutput = "Let's get some stats, what would you like to know?",
 	welcomeReprompt = "You can ask for unemployment, CPI or the population.",
-	APP_ID = 'amzn1.ask.skill.5b31247e-b299-4307-a0f9-1154c3e9c077',
+	APP_ID = 'amzn1.ask.skill.02cd168d-37f7-4b75-aac1-9093f075db9e',
 	fdb,
 	db,
 	speechOutput,
@@ -35,6 +37,7 @@ db = fdb.db('apiData');
  * available for the slot.
  */
 getRequestSlotInfo = function getRequestSlotInfo (slotData) {
+	console.log("slotData: " + JSON.stringify(slotData));
 	if (slotData && slotData.resolutions && slotData.resolutions.resolutionsPerAuthority && slotData.resolutions.resolutionsPerAuthority.length && slotData.resolutions.resolutionsPerAuthority[0].values && slotData.resolutions.resolutionsPerAuthority[0].values.length && slotData.resolutions.resolutionsPerAuthority[0].values[0].value) {
 		// We resolved a metric, read the required data
 		return slotData.resolutions.resolutionsPerAuthority[0].values[0].value;
@@ -64,7 +67,8 @@ launchRequestHandler = function launchRequestHandler () {
 getStatIntentHandler = function getStatIntentHandler (event, context) {
 	var self = this,
 		handleDialogComplete;
-	
+
+	console.log("APP_ID: " + alexa.appId);
 	console.log(">>> getStatIntentHandler()");
 	console.log("Calling handleDialogState()");
 	
@@ -830,9 +834,12 @@ isSlotValid = function isSlotValid (request, slotName) {
  * @param callback
  */
 exports.handler = function (event, context, callback) {
-	var alexa = Alexa.handler(event, context, callback);
+	console.log("Event: " + JSON.stringify(event));
+	console.log("Context: " + JSON.stringify(context));
 	
-	alexa.APP_ID = APP_ID;
+	alexa = Alexa.handler(event, context, callback);
+	
+	alexa.appId = APP_ID;
 	alexa.registerHandlers({
 		'LaunchRequest': launchRequestHandler,
 		'GetStatIntent': getStatIntentHandler,
